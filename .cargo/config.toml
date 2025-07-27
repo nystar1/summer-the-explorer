@@ -1,0 +1,5 @@
+[build]
+rustflags = ["--remap-path-prefix", ".=."] # you can remove this if you don't care about your build paths being in the final binary.
+
+[target.aarch64-apple-darwin]
+rustflags = ["-C", "link-arg=-mmacosx-version-min=15.0"] # feel free to reduce this to like 11.0 or smth
