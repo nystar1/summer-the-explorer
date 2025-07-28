@@ -61,13 +61,11 @@ pub async fn get_leaderboard(
                 u.slack_id,
                 u.username,
                 u.pfp_url,
-                COALESCE(MAX(sh.shells), u.current_shells) as shells,
-                RANK() OVER (ORDER BY COALESCE(MAX(sh.shells), u.current_shells) DESC) as rank
+                u.current_shells as shells,
+                RANK() OVER (ORDER BY u.current_shells DESC) as rank
             FROM users u
-            LEFT JOIN shell_history sh ON u.slack_id = sh.slack_id
-            WHERE u.current_shells > 0 OR sh.shells > 0
-            GROUP BY u.slack_id, u.username, u.current_shells, u.pfp_url
-            ORDER BY shells DESC
+            WHERE u.current_shells > 0
+            ORDER BY u.current_shells DESC
             LIMIT $1 OFFSET $2
             "#,
                 &[&i64::from(per_page), &i64::from(offset)],
